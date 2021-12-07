@@ -150,3 +150,8 @@ ul {
     transform: rotate(360deg);
   }
 }
+
+.borderClass {
+  border: 1px solid gray;
+  border-radius: 7px;
+}
