@@ -1,50 +1,44 @@
 import React, {useState} from "react";
-import hogs from "../porkers_data";
 
 import TitleArea from "./TitleArea";
 import NavArea from "./NavArea";
 import FeatureArea from "./FeatureArea";
 import TileArea from "./TileArea";
 
+import hogs from "../porkers_data";
+
 function App() {
 	const [greasedFilter, setGreasedFilter]= useState(false)
-	const [sort, setSort]= useState("")
-	const [featured, SetFeatured]= useState({name: ""})
-	const [pigs, SetPigs]= useState(hogs)
-
-	console.log("Greased?: ", greasedFilter)
-	console.log("Sort by?: ",  sort)
-
-	function sortPigs() { 
-		console.log("Sort within function:", sort)
-		if (sort === "name") {
-			SetPigs([...pigs.sort( (a, b) => (a.name < b.name ? -1 : 1 ) ) ] )
-			
-			/// ------- sort is one step behind in this function  --------
-		} else if (sort === "weight") { 
-			SetPigs([...pigs.sort((a, b) => (a.weight - b.weight))  ])
-			
-		} 
-
+	const [sortBy, setSortBy]= useState("")
+	const [featured, setFeatured]= useState({name: ""})
+		
+	let sortedPigs 
+	switch (sortBy) {
+		case "name":
+			sortedPigs = [...hogs].sort((a, b) => (a.name < b.name ? -1 : 1 ) )   // array.sort() method to sort alphabetically by x.name 
+			break;
+		case "weight":
+			sortedPigs = [...hogs].sort((a, b) => (a.weight - b.weight))   // array.sort() method to sort by x.weight
+			break;
+		default: sortedPigs = [...hogs]
 	}
 
-	let filteredPigs
-	if (greasedFilter) {
-		filteredPigs = pigs.filter(x => x.greased)
-	} else {
-		filteredPigs = pigs
-	}
+	let filteredSortedPigs = [...sortedPigs]
+	if (greasedFilter) {  filteredSortedPigs = [...sortedPigs].filter(x => x.greased)  } 
 
 	return (
 		<div className="App">
 			<TitleArea/>
 			<NavArea 
-				setGreasedFilter={ () => { setGreasedFilter((greasedFilter) => (!greasedFilter)); } } 
-				setSort={ (e)=> { setSort(e.target.value); sortPigs() } }   
+				greasedFilter={greasedFilter}
+				setGreasedFilter={setGreasedFilter} 
+				setSortBy= {setSortBy}
 			/>
-			{ featured.name === "" ?  '' : <FeatureArea featured={featured} imageClick={ () => SetFeatured({name: ""}) }/>  }
+			{ featured.name === "" ?  '' : 
+				<FeatureArea featured={featured} setFeatured={setFeatured}/>  
+			}
 			<br/>
-			<TileArea filteredPigs={filteredPigs} tileClick={ (pig) => SetFeatured(pig) }/>
+			<TileArea filteredSortedPigs={filteredSortedPigs} setFeatured={setFeatured}/>
 		</div>
 	);
 }
