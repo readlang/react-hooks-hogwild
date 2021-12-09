@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 
 import TitleArea from "./TitleArea";
-import NavArea from "./NavArea";
+import FilterSortArea from "./FilterSortArea";
 import FeatureArea from "./FeatureArea";
 import TileArea from "./TileArea";
 
@@ -11,25 +11,23 @@ function App() {
 	const [greasedFilter, setGreasedFilter]= useState(false)
 	const [sortBy, setSortBy]= useState("")
 	const [featured, setFeatured]= useState({name: ""})
-		
-	let sortedPigs 
-	switch (sortBy) {
-		case "name":
-			sortedPigs = [...hogs].sort((a, b) => (a.name < b.name ? -1 : 1 ) )   // array.sort() method to sort alphabetically by x.name 
-			break;
-		case "weight":
-			sortedPigs = [...hogs].sort((a, b) => (a.weight - b.weight))   // array.sort() method to sort by x.weight
-			break;
-		default: sortedPigs = [...hogs]
-	}
+	
+	const filteredPigs = hogs.filter(pig => ( greasedFilter ? pig.greased : true ))
 
-	let filteredSortedPigs = [...sortedPigs]
-	if (greasedFilter) {  filteredSortedPigs = [...sortedPigs].filter(x => x.greased)  } 
+	const filteredSortedPigs = filteredPigs.sort((a, b) => {
+		if (sortBy === "name") {
+			return(a.name < b.name ? -1 : 1 )
+		} else if (sortBy === "weight") {
+			return( a.weight - b.weight )
+		} else {
+			return(a, b)
+		}
+	})
 
 	return (
 		<div className="App">
 			<TitleArea/>
-			<NavArea 
+			<FilterSortArea 
 				greasedFilter={greasedFilter}
 				setGreasedFilter={setGreasedFilter} 
 				setSortBy= {setSortBy}
@@ -40,7 +38,7 @@ function App() {
 			<br/>
 			<TileArea filteredSortedPigs={filteredSortedPigs} setFeatured={setFeatured}/>
 		</div>
-	);
+	);	
 }
 
 export default App;

@@ -1,6 +1,6 @@
 import React from "react";
 
-function NavArea({greasedFilter, setGreasedFilter, setSortBy}) {
+function FilterSortArea({greasedFilter, setGreasedFilter, setSortBy}) {
 	return (
 		<div className="navWrapper" style={{border: "1px gray solid"}}  >
 			<br/>
@@ -20,4 +20,4 @@ function NavArea({greasedFilter, setGreasedFilter, setSortBy}) {
 	);
 };
 
-export default NavArea;
+export default FilterSortArea;
